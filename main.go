@@ -1,31 +1,25 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"meli/quasar/router"
+	"meli/quasar/satelite"
+	"net/http"
+)
 
-type satellite struct {
-	x float32
-	y float32
-}
+func configureSatelites() {
+	kenobi := satelite.NewSatelite(-500, 200)
+	skywalker := satelite.NewSatelite(100, -100)
+	sato := satelite.NewSatelite(500, 100)
 
-func newSatellite(x float32, y float32) *satellite {
-	s := satellite{x: x, y: y}
-	return &s
-}
-
-func (sat satellite) GetLocation(distance float32) (x, y float32) {
-	return sat.x, sat.y
-}
-
-func getMessage(messages []string) (msg string) {
-	return messages[0]
+	fmt.Println("kenobi = ", kenobi)
+	fmt.Println("skywalker = ", skywalker)
+	fmt.Println("sato = ", sato)
 }
 
 func main() {
-	kenobi := newSatellite(-500, 200)
-	skywalker := newSatellite(100, -100)
-	sato := newSatellite(500, 100)
-
-	fmt.Println(kenobi)
-	fmt.Println(skywalker)
-	fmt.Println(sato)
+	configureSatelites()
+	router := router.DeclareRouter()
+	http.ListenAndServe(":5000", router)
+	fmt.Println("Quasar server is listening in port 5000")
 }

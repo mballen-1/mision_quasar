@@ -13,23 +13,23 @@ import (
 func GetLocationAndMessageHandler(w http.ResponseWriter, r *http.Request) {
 	// Read body
 	b, err := ioutil.ReadAll(r.Body)
-	fmt.Println("b", b)
+	// fmt.Println("b", b)
 	defer r.Body.Close()
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
 	}
 
-	// Unmarshal
 	var requestBody APIRequestBody
 	err = json.Unmarshal(b, &requestBody)
-	fmt.Printf("msg = %+v", requestBody)
+	//fmt.Printf("msg = %+v", requestBody)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
 	}
 
-	output, err := json.Marshal(requestBody)
+	requestResponse := SolveShipMessageAndPosition(requestBody)
+	output, err := json.Marshal(requestResponse)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return

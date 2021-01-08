@@ -1,1 +1,1 @@
-web: bin/mision_quasar
+web: bin/quasar

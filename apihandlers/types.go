@@ -1,12 +1,12 @@
 package apihandlers
 
-type Position struct {
+type PositionResponse struct {
 	X float32
 	Y float32
 }
 
 type APIResponse struct {
-	Position Position
+	Position PositionResponse
 	Message  string
 }
 

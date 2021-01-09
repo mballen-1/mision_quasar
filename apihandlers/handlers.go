@@ -11,9 +11,7 @@ import (
 
 // GetLocationAndMessageHandler recieves and handle Location and Message request
 func GetLocationAndMessageHandler(w http.ResponseWriter, r *http.Request) {
-	// Read body
 	b, err := ioutil.ReadAll(r.Body)
-	// fmt.Println("b", b)
 	defer r.Body.Close()
 	if err != nil {
 		http.Error(w, err.Error(), 500)
@@ -22,13 +20,12 @@ func GetLocationAndMessageHandler(w http.ResponseWriter, r *http.Request) {
 
 	var requestBody APIRequestBody
 	err = json.Unmarshal(b, &requestBody)
-	//fmt.Printf("msg = %+v", requestBody)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
 	}
 
-	requestResponse := SolveShipMessageAndPosition(requestBody)
+	requestResponse := FindShipMessageAndPosition(requestBody)
 	output, err := json.Marshal(requestResponse)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
@@ -38,7 +35,7 @@ func GetLocationAndMessageHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(output)
 }
 
-// GetLocationAndMessageSplitHandler recieves and handle Location and Message request for an specific satelite
+// GetLocationAndMessageSplitHandler recieves and handle Location and Message request from an specific satelite
 func GetLocationAndMessageSplitHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	satelite := vars["satelite_name"]

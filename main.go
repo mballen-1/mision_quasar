@@ -11,10 +11,10 @@ import (
 func main() {
 	satelite.ConfigureSatelites()
 	router := router.DeclareRouter()
-	fmt.Println("Quasar server is listening in port 5000")
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8000"
 	}
+	fmt.Println("Quasar server is listening in port:" + port)
 	http.ListenAndServe(":"+port, router)
 }

@@ -23,7 +23,6 @@ func GetLocationAndMessageHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
-	defer r.Body.Close()
 
 	requestResponse := FindShipMessageAndPosition(requestBody)
 	output, err := json.Marshal(requestResponse)
@@ -39,6 +38,7 @@ func GetLocationAndMessageHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("content-type", "application/json")
 	w.Write(output)
+	defer r.Body.Close()
 }
 
 // GetLocationAndMessageSplitHandler recieves and handle Location and Message request from an specific satelite
@@ -47,8 +47,6 @@ func GetLocationAndMessageSplitHandler(w http.ResponseWriter, r *http.Request) {
 	sateliteName := vars["satelite_name"]
 
 	b, err := ioutil.ReadAll(r.Body)
-	defer r.Body.Close()
-
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -62,7 +60,6 @@ func GetLocationAndMessageSplitHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	requestResponse := FindShipMessageAndPositionSplit(requestBody, sateliteName)
-
 	output, err := json.Marshal(requestResponse)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
@@ -76,7 +73,7 @@ func GetLocationAndMessageSplitHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("content-type", "application/json")
 	w.Write(output)
-
+	defer r.Body.Close()
 }
 
 // PostSateliteSplitHandler ...
@@ -85,8 +82,6 @@ func PostSateliteSplitHandler(w http.ResponseWriter, r *http.Request) {
 	sateliteName := vars["satelite_name"]
 
 	b, err := ioutil.ReadAll(r.Body)
-	defer r.Body.Close()
-
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -110,5 +105,5 @@ func PostSateliteSplitHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("content-type", "application/json")
 	w.Write(output)
-
+	defer r.Body.Close()
 }

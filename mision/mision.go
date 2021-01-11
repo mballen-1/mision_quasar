@@ -3,6 +3,7 @@ package mision
 import (
 	"math"
 	"meli/quasar/satelite"
+	"strings"
 )
 
 // GetLocation := input: distancia al emisor como se recibe en cada satélite
@@ -73,5 +74,5 @@ func GetMessage(messages ...[]string) (msg string) {
 	for v := range resultingMessage {
 		result += resultingMessage[v] + " "
 	}
-	return result
+	return strings.TrimSuffix(result, " ")
 }

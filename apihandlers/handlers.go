@@ -12,7 +12,6 @@ import (
 // GetLocationAndMessageHandler recieves and handle Location and Message request
 func GetLocationAndMessageHandler(w http.ResponseWriter, r *http.Request) {
 	b, err := ioutil.ReadAll(r.Body)
-	defer r.Body.Close()
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -24,6 +23,7 @@ func GetLocationAndMessageHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
+	defer r.Body.Close()
 
 	requestResponse := FindShipMessageAndPosition(requestBody)
 	output, err := json.Marshal(requestResponse)
@@ -31,6 +31,12 @@ func GetLocationAndMessageHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
+
+	if UndeterminedResponse(requestResponse) {
+		http.NotFound(w, r)
+		return
+	}
+
 	w.Header().Set("content-type", "application/json")
 	w.Write(output)
 }
@@ -62,6 +68,12 @@ func GetLocationAndMessageSplitHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
+
+	if UndeterminedResponse(requestResponse) {
+		http.NotFound(w, r)
+		return
+	}
+
 	w.Header().Set("content-type", "application/json")
 	w.Write(output)
 

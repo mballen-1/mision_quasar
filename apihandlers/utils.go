@@ -1,6 +1,7 @@
 package apihandlers
 
 import (
+	"math"
 	"meli/quasar/mision"
 	"meli/quasar/satelite"
 )
@@ -16,7 +17,6 @@ func SaveDataFromBody(payload []SatellitePayload) {
 	for _, v := range payload {
 		satelite.SetSateliteDistance(v.Distance, v.Name)
 	}
-
 	for _, v := range payload {
 		satelite.SetSateliteMessage(v.Message, v.Name)
 	}
@@ -35,4 +35,21 @@ func AccomplishMission(messages [][]string, distances []float32) APIResponse {
 	response.Position.X, response.Position.Y = mision.GetLocation(distances...)
 	response.Message = mision.GetMessage(messages...)
 	return response
+}
+
+// UndeterminedResponse ...
+func UndeterminedResponse(response APIResponse) bool {
+	return NoMessageFound(response) ||
+		NoPositionFound(response)
+}
+
+// NoMessageFound ...
+func NoMessageFound(response APIResponse) bool {
+	return response.Message == mision.NoMessageDetermined
+}
+
+// NoPositionFound ...
+func NoPositionFound(response APIResponse) bool {
+	return response.Position.X == math.MaxFloat32 &&
+		response.Position.Y == math.MaxFloat32
 }

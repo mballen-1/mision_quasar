@@ -53,3 +53,10 @@ func NoPositionFound(response APIResponse) bool {
 	return response.Position.X == math.MaxFloat32 &&
 		response.Position.Y == math.MaxFloat32
 }
+
+// ValidSateliteName ...
+func ValidSateliteName(sateliteName string) bool {
+	return sateliteName == "sato" ||
+		sateliteName == "skywalker" ||
+		sateliteName == "kenobi"
+}

@@ -94,10 +94,15 @@ func PostSateliteSplitHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if !ValidSateliteName(sateliteName) {
+		http.NotFound(w, r)
+		return
+	}
+
 	satelite.SetSateliteMessage(requestBody.Message, sateliteName)
 	satelite.SetSateliteDistance(requestBody.Distance, sateliteName)
 
-	requestResponse := "Message Saved"
+	requestResponse := "Satelite data was saved"
 	output, err := json.Marshal(requestResponse)
 	if err != nil {
 		http.Error(w, err.Error(), 500)

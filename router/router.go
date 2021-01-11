@@ -11,6 +11,6 @@ func DeclareRouter() *mux.Router {
 	router := mux.NewRouter()
 	router.HandleFunc(TopSecretRoute, apihandlers.GetLocationAndMessageHandler).Methods("POST")
 	router.HandleFunc(TopSecretSplitRoute, apihandlers.GetLocationAndMessageSplitHandler).Methods("GET")
-	// router.HandleFunc(TopSecretSplitRoute, apihandlers.GetLocationAndMessageHandler).Methods("POST")
+	router.HandleFunc(TopSecretSplitRoute, apihandlers.SaveSateliteDataHandler).Methods("POST")
 	return router
 }

@@ -41,3 +41,8 @@ func GetLocationAndMessageSplitHandler(w http.ResponseWriter, r *http.Request) {
 	satelite := vars["satelite_name"]
 	fmt.Println("satelite =", satelite)
 }
+
+// SaveSateliteMessageHandler
+func SaveSateliteDataHandler(w http.ResponseWriter, r *http.Request) {
+
+}

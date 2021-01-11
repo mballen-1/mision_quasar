@@ -12,7 +12,6 @@ func FindShipMessageAndPosition(requestBody APIRequestBody) APIResponse {
 	satelitesData := requestBody.Satellites
 	distances, messages, sateliteNames := ParseDataFromBody(satelitesData)
 	fmt.Println("sateliteNames =>", sateliteNames)
-	fmt.Println("messages =>", messages)
 	var response APIResponse
 	response.Position.X, response.Position.Y = mision.GetLocation(distances...)
 	response.Message = mision.GetMessage(messages...)

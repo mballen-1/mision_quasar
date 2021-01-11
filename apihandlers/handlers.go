@@ -2,8 +2,8 @@ package apihandlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
+	"meli/quasar/satelite"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -38,11 +38,65 @@ func GetLocationAndMessageHandler(w http.ResponseWriter, r *http.Request) {
 // GetLocationAndMessageSplitHandler recieves and handle Location and Message request from an specific satelite
 func GetLocationAndMessageSplitHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	satelite := vars["satelite_name"]
-	fmt.Println("satelite =", satelite)
+	sateliteName := vars["satelite_name"]
+
+	b, err := ioutil.ReadAll(r.Body)
+	defer r.Body.Close()
+
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	var requestBody APISplitRequestBody
+	err = json.Unmarshal(b, &requestBody)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	requestResponse := FindShipMessageAndPositionSplit(requestBody, sateliteName)
+
+	output, err := json.Marshal(requestResponse)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	w.Header().Set("content-type", "application/json")
+	w.Write(output)
+
 }
 
-// SaveSateliteMessageHandler
-func SaveSateliteDataHandler(w http.ResponseWriter, r *http.Request) {
+// PostSateliteSplitHandler ...
+func PostSateliteSplitHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	sateliteName := vars["satelite_name"]
+
+	b, err := ioutil.ReadAll(r.Body)
+	defer r.Body.Close()
+
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	var requestBody APISplitRequestBody
+	err = json.Unmarshal(b, &requestBody)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	satelite.SetSateliteMessage(requestBody.Message, sateliteName)
+	satelite.SetSateliteDistance(requestBody.Distance, sateliteName)
+
+	requestResponse := "Message Saved"
+	output, err := json.Marshal(requestResponse)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	w.Header().Set("content-type", "application/json")
+	w.Write(output)
 
 }

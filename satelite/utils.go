@@ -4,14 +4,12 @@ import (
 	"math"
 )
 
-// CirclesTouch ...
-func CirclesTouch(s1 Satelite, s2 Satelite, r1 float32, r2 float32) bool {
+// CirclesIntersect finds if two circles intersect ...
+func CirclesIntersect(s1 Satelite, s2 Satelite, r1 float32, r2 float32) bool {
 	dx := float64(s1.X - s2.X)
 	dy := float64(s1.Y - s2.Y)
 
 	distanceBetweenCenters := math.Sqrt(math.Pow(dx, 2) + math.Pow(dy, 2))
-
-	println("distanceBetweenCenters = %v", distanceBetweenCenters)
 
 	radioDifference := math.Abs(float64(r1 - r2))
 
@@ -22,9 +20,10 @@ func CirclesTouch(s1 Satelite, s2 Satelite, r1 float32, r2 float32) bool {
 		(radioDifference < distanceBetweenCenters && distanceBetweenCenters < radioSum)
 }
 
-func FindIntersectionPoints(s1 Satelite, s2 Satelite, r1 float32, r2 float32) (x, y, xPrime, yPrime float64) {
-	x1 := s1.X
-	y1 := s1.Y
+// FindIntersectionPoints find coordinates of points where two circles intersect
+func FindIntersectionPoints(s1 Satelite, s2 Satelite, r1 float32, r2 float32) (x, y, xPrime, yPrime int) {
+	x1 := float64(s1.X)
+	y1 := float64(s1.Y)
 
 	dx := float64(s2.X - s1.X)
 	dy := float64(s2.Y - s1.Y)
@@ -54,9 +53,9 @@ func FindIntersectionPoints(s1 Satelite, s2 Satelite, r1 float32, r2 float32) (x
 	ry := dx * (h / distanceBetweenCenters)
 
 	/* Determine the absolute intersection points. */
-	xi := ax + rx
-	xiPrime := ax - rx
-	yi := ay + ry
-	yiPrime := ay - ry
+	xi := int(ax + rx)
+	xiPrime := int(ax - rx)
+	yi := int(ay + ry)
+	yiPrime := int(ay - ry)
 	return xi, yi, xiPrime, yiPrime
 }

@@ -19,3 +19,8 @@ type SatellitePayload struct {
 type APIRequestBody struct {
 	Satellites []SatellitePayload `json:"satellites"`
 }
+
+type APISplitRequestBody struct {
+	Distance float32  `json:"distance"`
+	Message  []string `json:"message"`
+}

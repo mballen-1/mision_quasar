@@ -1,7 +1,7 @@
 package mision
 
 import (
-	"fmt"
+	"math"
 	"meli/quasar/satelite"
 )
 
@@ -13,19 +13,36 @@ func GetLocation(distances ...float32) (x, y float32) {
 	sato := satelite.Sato
 
 	thereIsSolution :=
-		satelite.CirclesTouch(kenobi, skywalker, distances[0], distances[1]) &&
-			satelite.CirclesTouch(kenobi, sato, distances[0], distances[2]) &&
-			satelite.CirclesTouch(skywalker, sato, distances[1], distances[2])
+		satelite.CirclesIntersect(kenobi, skywalker, distances[0], distances[1]) &&
+			satelite.CirclesIntersect(kenobi, sato, distances[0], distances[2]) &&
+			satelite.CirclesIntersect(skywalker, sato, distances[1], distances[2])
 
 	if !thereIsSolution {
-		return -1, -1
+		return math.MaxFloat32, math.MaxFloat32
 	}
 
 	answerX, answerY, answerXPrime, answerYPrime := satelite.FindIntersectionPoints(kenobi, skywalker, distances[0], distances[1])
 
-	fmt.Println(answerXPrime, answerYPrime)
+	f64SatoX := float64(sato.X)
+	f64SatoY := float64(sato.Y)
 
-	return float32(answerX), float32(answerY)
+	distanceSatoToIntersectionPoint1 :=
+		math.Sqrt(
+			math.Pow(f64SatoX-float64(answerX), 2) +
+				math.Pow(f64SatoY-float64(answerY), 2))
+
+	distanceSatoToIntersectionPoint2 :=
+		math.Sqrt(
+			math.Pow(f64SatoX-float64(answerXPrime), 2) +
+				math.Pow(f64SatoY-float64(answerYPrime), 2))
+
+	if distanceSatoToIntersectionPoint1 == float64(distances[2]) {
+		return float32(answerX), float32(answerY)
+	}
+	if distanceSatoToIntersectionPoint2 == float64(distances[2]) {
+		return float32(answerXPrime), float32(answerYPrime)
+	}
+	return math.MaxFloat32, math.MaxFloat32
 }
 
 // GetMessage := (input): el mensaje recibido de cada satélite

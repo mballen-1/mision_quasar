@@ -1,40 +1,38 @@
 package apihandlers
 
 import (
-	"fmt"
 	"meli/quasar/mision"
+	"meli/quasar/satelite"
 )
-
-var sateliteNames []string
 
 // FindShipMessageAndPosition parses json body and invoke mision functions to solve message and position from a ship / request
 func FindShipMessageAndPosition(requestBody APIRequestBody) APIResponse {
-	satelitesData := requestBody.Satellites
-	distances, messages, sateliteNames := ParseDataFromBody(satelitesData)
-	fmt.Println("sateliteNames =>", sateliteNames)
+	SaveDataFromBody(requestBody.Satellites)
+	return AccomplishMission(satelite.GetMessages(), satelite.GetDistances())
+}
+
+// SaveDataFromBody return distances, messages and satellite names from payload
+func SaveDataFromBody(payload []SatellitePayload) {
+	for _, v := range payload {
+		satelite.SetSateliteDistance(v.Distance, v.Name)
+	}
+
+	for _, v := range payload {
+		satelite.SetSateliteMessage(v.Message, v.Name)
+	}
+}
+
+// FindShipMessageAndPositionSplit parses json body and invoke mision functions to solve message and position from a ship / request
+func FindShipMessageAndPositionSplit(requestBody APISplitRequestBody, sateliteName string) APIResponse {
+	satelite.SetSateliteMessage(requestBody.Message, sateliteName)
+	satelite.SetSateliteDistance(requestBody.Distance, sateliteName)
+	return AccomplishMission(satelite.GetMessages(), satelite.GetDistances())
+}
+
+// AccomplishMission ...
+func AccomplishMission(messages [][]string, distances []float32) APIResponse {
 	var response APIResponse
 	response.Position.X, response.Position.Y = mision.GetLocation(distances...)
 	response.Message = mision.GetMessage(messages...)
 	return response
-}
-
-// ParseDataFromBody return distances, messages and satellite names from payload
-func ParseDataFromBody(payload []SatellitePayload) (d []float32, m [][]string, n []string) {
-	totalSatelites := len(payload)
-
-	distances := make([]float32, totalSatelites)
-	for i, v := range payload {
-		distances[i] = v.Distance
-	}
-
-	messages := make([][]string, totalSatelites)
-	for i, v := range payload {
-		messages[i] = v.Message
-	}
-
-	names := make([]string, totalSatelites)
-	for i, v := range payload {
-		names[i] = v.Name
-	}
-	return distances, messages, names
 }

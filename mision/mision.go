@@ -21,7 +21,8 @@ func GetLocation(distances ...float32) (x, y float32) {
 		return math.MaxFloat32, math.MaxFloat32
 	}
 
-	answerX, answerY, answerXPrime, answerYPrime := satelite.FindIntersectionPoints(kenobi, skywalker, distances[0], distances[1])
+	answerX, answerY, answerXPrime, answerYPrime :=
+		satelite.FindIntersectionPoints(kenobi, skywalker, distances[0], distances[1])
 
 	f64SatoX := float64(sato.X)
 	f64SatoY := float64(sato.Y)

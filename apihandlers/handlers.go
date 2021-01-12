@@ -52,6 +52,11 @@ func GetLocationAndMessageSplitHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if !ValidSateliteName(sateliteName) {
+		http.NotFound(w, r)
+		return
+	}
+
 	var requestBody APISplitRequestBody
 	err = json.Unmarshal(b, &requestBody)
 	if err != nil {

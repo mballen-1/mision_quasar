@@ -20,7 +20,9 @@ func CirclesIntersect(s1 Satelite, s2 Satelite, r1 float32, r2 float32) bool {
 		(radioDifference < distanceBetweenCenters && distanceBetweenCenters < radioSum)
 }
 
-// FindIntersectionPoints find coordinates of points where two circles intersect
+// FindIntersectionPoints find coordinates of points where two circles intersect.
+// Original from: http://paulbourke.net/geometry/circlesphere/
+// and http://paulbourke.net/geometry/circlesphere/tvoght.c
 func FindIntersectionPoints(s1 Satelite, s2 Satelite, r1 float32, r2 float32) (x, y, xPrime, yPrime int) {
 	x1 := float64(s1.X)
 	y1 := float64(s1.Y)
@@ -32,6 +34,11 @@ func FindIntersectionPoints(s1 Satelite, s2 Satelite, r1 float32, r2 float32) (x
 	r2Squared := math.Pow(float64(r2), 2)
 
 	distanceBetweenCenters := math.Sqrt(math.Pow(dx, 2) + math.Pow(dy, 2))
+
+	/* 'point 2' is the point where the line through the circle
+	* intersection points crosses the line between the circle
+	* centers.
+	 */
 	/* Determine the distance from point 0 to point 2. */
 	a := ((r1Squared) - (r2Squared) + (math.Pow(distanceBetweenCenters, 2))) / (2.0 * distanceBetweenCenters)
 

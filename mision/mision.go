@@ -65,7 +65,6 @@ func GetMessage(messages ...[]string) (msg string) {
 			currentMessagePart := messages[i][j]
 			if currentMessagePart != "" {
 				resultingMessage[j] = currentMessagePart
-				j++
 			}
 		}
 	}
